@@ -63,6 +63,10 @@ export default {
     isFetchingAssets: {
       description: 'It indicates whether the assets prop is still fetching',
     },
+    isVersionComparison: {
+      description: 'It indicates whether the preview component is used as version comparison',
+      type: 'boolean',
+    },
     isNextButtonDisabled: {
       description: 'Enable/disable next button.',
     },
@@ -175,6 +179,7 @@ export const ExampleImagePreview = {
     isFetchingAssets: false,
     selectButtonTitle: 'Select',
     tooltipTexts,
+    isVersionComparison: false,
   },
 };
 

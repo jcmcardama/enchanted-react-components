@@ -296,7 +296,7 @@ const Preview: React.FC<PreviewProps> = ({
   isFetchingAssets = false,
   customHeaderTitle,
   handleError,
-  isVersionComparison = true,
+  isVersionComparison = false,
 }: PreviewProps) => {
   const fallbackAssetValue: Assets[] = [
     {
