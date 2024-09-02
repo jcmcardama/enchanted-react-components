@@ -725,21 +725,23 @@ const Preview: React.FC<PreviewProps> = ({
               height: `calc(100% - ${isVideo ? '55' : '61'}px)`,
             }}
           >
-            <Tooltip
-              tooltipsize="small"
-              placement="bottom-start"
-              title={tooltipTexts.previousAsset}
-            >
-              <PreviousPreviewButton>
-                <StyledArrowButton
-                  data-testid={PreviewTestIds.PREVIEW_PREV_BUTTON}
-                  disabled={isPreviousDisabled}
-                  onClick={handlePreviousAsset}
-                >
-                  <ChevronLeft />
-                </StyledArrowButton>
-              </PreviousPreviewButton>
-            </Tooltip>
+            { !isVersionComparison && (
+              <Tooltip
+                tooltipsize="small"
+                placement="bottom-start"
+                title={tooltipTexts.previousAsset}
+              >
+                <PreviousPreviewButton>
+                  <StyledArrowButton
+                    data-testid={PreviewTestIds.PREVIEW_PREV_BUTTON}
+                    disabled={isPreviousDisabled}
+                    onClick={handlePreviousAsset}
+                  >
+                    <ChevronLeft />
+                  </StyledArrowButton>
+                </PreviousPreviewButton>
+              </Tooltip>
+            )}
             <>
               {(isCurrentAssetReady === false && reactComponent === undefined) && (
               <CircularProgressContainer
@@ -754,23 +756,25 @@ const Preview: React.FC<PreviewProps> = ({
               )}
               {renderOptions()}
             </>
-            <Tooltip
-              tooltipsize="small"
-              placement="bottom-end"
-              title={tooltipTexts.nextAsset}
-            >
-              <NextPreviewButton>
-                <StyledArrowButton
-                  data-testid={PreviewTestIds.PREVIEW_NEXT_BUTTON}
-                  disabled={isNextDisabled}
-                  onClick={handleNextAsset}
-                >
-                  <ChevronRight />
-                </StyledArrowButton>
-              </NextPreviewButton>
-            </Tooltip>
+            { !isVersionComparison && (
+              <Tooltip
+                tooltipsize="small"
+                placement="bottom-end"
+                title={tooltipTexts.nextAsset}
+              >
+                <NextPreviewButton>
+                  <StyledArrowButton
+                    data-testid={PreviewTestIds.PREVIEW_NEXT_BUTTON}
+                    disabled={isNextDisabled}
+                    onClick={handleNextAsset}
+                  >
+                    <ChevronRight />
+                  </StyledArrowButton>
+                </NextPreviewButton>
+              </Tooltip>
+            )}
           </ImageContainer>
-          {(!isVideo && isCurrentAssetReady && reactComponent === undefined) && (
+          {(!isVersionComparison && !isVideo && isCurrentAssetReady && reactComponent === undefined) && (
           <Grid
             container
             justifyContent="center"
