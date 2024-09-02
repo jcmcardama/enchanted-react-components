@@ -672,18 +672,32 @@ const Preview: React.FC<PreviewProps> = ({
                 placement="bottom"
                 title={tooltipTexts.download}
               >
-                <Button
-                  data-testid={PreviewTestIds.PREVIEW_DOWNLOAD_BUTTON}
-                  variant={ButtonVariants.TEXT}
-                  disabled={!isCurrentAssetReady || reactComponent !== undefined}
-                  onClick={(e) => {
-                    const selectRenditionId = currentRendition.id;
-                    if (handleDownload) handleDownload(e, selectRenditionId);
-                  }}
-                  startIcon={<IconDownload />}
-                >
-                  {tooltipTexts.download}
-                </Button>
+                { isVersionComparison ? (
+                  <Button
+                    data-testid={PreviewTestIds.PREVIEW_DOWNLOAD_BUTTON}
+                    variant={ButtonVariants.TEXT}
+                    disabled={!isCurrentAssetReady || reactComponent !== undefined}
+                    onClick={(e) => {
+                      const selectRenditionId = currentRendition.id;
+                      if (handleDownload) handleDownload(e, selectRenditionId);
+                    }}
+                    startIcon={<IconDownload />}
+                  >
+                    {tooltipTexts.download}
+                  </Button>
+                ) : (
+                  <IconButton
+                    data-testid={PreviewTestIds.PREVIEW_DOWNLOAD_BUTTON}
+                    variant={IconButtonVariants.WITH_PADDING}
+                    disabled={!isCurrentAssetReady || reactComponent !== undefined}
+                    onClick={(e) => {
+                      const selectRenditionId = currentRendition.id;
+                      if (handleDownload) handleDownload(e, selectRenditionId);
+                    }}
+                  >
+                    <IconDownload />
+                  </IconButton>
+                )}
               </Tooltip>,
               <Button
                 data-testid={PreviewTestIds.PREVIEW_SELECT_BUTTON}
