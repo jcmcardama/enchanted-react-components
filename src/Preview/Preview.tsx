@@ -53,6 +53,7 @@ import { white } from '../colors';
  * @property {function} overrideHandleNext - Event handler that overrides the default next asset navigation
  * @property {boolean} isFetchingAssets - indicate whether the assets prop is still fetching, Note: even when this is false and asset is not finished rendering, <Preview /> will still show spinner
  * @property {boolean} customHeaderTitle - custom header title
+ * @property {boolean} isVersionComparison - check if the preivew is used for version comparison
 */
 
 export interface MediaType {
@@ -98,6 +99,7 @@ export interface PreviewProps {
   isFetchingAssets?: boolean;
   customHeaderTitle?: string;
   handleError?: (event: React.SyntheticEvent<HTMLVideoElement | HTMLImageElement, Event>) => void;
+  isVersionComparison?: boolean;
 }
 
 // Zoom button margin is 12px
@@ -294,6 +296,7 @@ const Preview: React.FC<PreviewProps> = ({
   isFetchingAssets = false,
   customHeaderTitle,
   handleError,
+  isVersionComparison = true,
 }: PreviewProps) => {
   const fallbackAssetValue: Assets[] = [
     {
@@ -662,24 +665,25 @@ const Preview: React.FC<PreviewProps> = ({
                 })}
               </Select>,
             ]}
-            hideMiddleSection={isVideo}
+            hideMiddleSection={isVideo || isVersionComparison}
             endSection={[
               <Tooltip
                 tooltipsize="small"
                 placement="bottom"
                 title={tooltipTexts.download}
               >
-                <IconButton
+                <Button
                   data-testid={PreviewTestIds.PREVIEW_DOWNLOAD_BUTTON}
-                  variant={IconButtonVariants.WITH_PADDING}
+                  variant={ButtonVariants.TEXT}
                   disabled={!isCurrentAssetReady || reactComponent !== undefined}
                   onClick={(e) => {
                     const selectRenditionId = currentRendition.id;
                     if (handleDownload) handleDownload(e, selectRenditionId);
                   }}
+                  startIcon={<IconDownload />}
                 >
-                  <IconDownload />
-                </IconButton>
+                  {tooltipTexts.download}
+                </Button>
               </Tooltip>,
               <Button
                 data-testid={PreviewTestIds.PREVIEW_SELECT_BUTTON}

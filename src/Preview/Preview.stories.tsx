@@ -98,7 +98,7 @@ const tooltipTexts: PreviewProps['tooltipTexts'] = {
   viewActualSize: 'View actual size',
   previousAsset: 'Previous asset',
   nextAsset: 'Next asset',
-  download: 'Download asset',
+  download: 'Download',
 };
 
 const Template: StoryFn<typeof Preview> = (args) => {
