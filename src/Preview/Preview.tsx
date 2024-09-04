@@ -99,7 +99,11 @@ export interface PreviewProps {
   isFetchingAssets?: boolean;
   customHeaderTitle?: string;
   handleError?: (event: React.SyntheticEvent<HTMLVideoElement | HTMLImageElement, Event>) => void;
-  isVersionComparison?: boolean;
+  versions: Partial<{
+    compare: boolean;
+    versionOne: Assets;
+    versionTwo: Assets;
+  }>;
 }
 
 // Zoom button margin is 12px
@@ -277,6 +281,123 @@ const zoomOptions = [
   400,
 ];
 
+interface PreviewHeaderProps {
+  customTitle?: string;
+  renditionLabel: string;
+  onChangeRendition?: ((event: SelectChangeEvent<unknown>, child: React.ReactNode) => void) | undefined;
+  disableRenditionDropdown?: boolean;
+  currentAsset: Assets;
+  hideMiddleSection?: boolean;
+  isVersionComparison?: boolean;
+  downloadTooltipText?: string;
+  disableDownload: boolean;
+  handleDownload?: (event: React.ChangeEvent<{}>, imageRenditionId: string) => void
+  currentRendition: AssetRendition;
+  onClickBackButton?: Function;
+  handleSelect?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  disableSelectButton?: boolean;
+  selectButtonTitle: string;
+}
+
+const PreviewHeader: React.FC<PreviewHeaderProps> = ({
+  customTitle,
+  renditionLabel,
+  onChangeRendition,
+  disableRenditionDropdown,
+  currentAsset,
+  hideMiddleSection,
+  isVersionComparison,
+  downloadTooltipText,
+  disableDownload,
+  handleDownload,
+  currentRendition,
+  onClickBackButton,
+  handleSelect,
+  disableSelectButton,
+  selectButtonTitle,
+}) => {
+  return (
+    <Grid>
+      <Header
+        startSection={{
+          hamburgerSpace: false,
+          withBackButton: true,
+          title: customTitle ?? currentAsset.title,
+        }}
+        middleSection={[
+          <Typography color="textSecondary" variant="subtitle2" marginRight={-1}>{renditionLabel}</Typography>,
+          <Select
+            data-testid={PreviewTestIds.PREVIEW_RENDITION_DROPDOWN}
+            hiddenLabel
+            required
+            value={currentRendition.type}
+            onChange={onChangeRendition}
+            disabled={disableRenditionDropdown}
+          >
+            {currentAsset.renditions.map((rendition) => {
+              return (
+                <MenuItem
+                  key={rendition.type}
+                  value={rendition.type}
+                  size="small"
+                >
+                  {rendition.type ? (
+                    <ListItemText primary={`${rendition.type} (${rendition.dimension})`} />
+                  ) : ''}
+                </MenuItem>
+              );
+            })}
+          </Select>,
+        ]}
+        hideMiddleSection={hideMiddleSection}
+        endSection={[
+          <Tooltip
+            tooltipsize="small"
+            placement="bottom"
+            title={downloadTooltipText}
+          >
+            { isVersionComparison ? (
+              <Button
+                data-testid={PreviewTestIds.PREVIEW_DOWNLOAD_BUTTON}
+                variant={ButtonVariants.TEXT}
+                disabled={disableDownload}
+                onClick={(e) => {
+                  const selectRenditionId = currentRendition.id;
+                  if (handleDownload) handleDownload(e, selectRenditionId);
+                }}
+                startIcon={<IconDownload />}
+              >
+                {downloadTooltipText}
+              </Button>
+            ) : (
+              <IconButton
+                data-testid={PreviewTestIds.PREVIEW_DOWNLOAD_BUTTON}
+                variant={IconButtonVariants.WITH_PADDING}
+                disabled={disableDownload}
+                onClick={(e) => {
+                  const selectRenditionId = currentRendition.id;
+                  if (handleDownload) handleDownload(e, selectRenditionId);
+                }}
+              >
+                <IconDownload />
+              </IconButton>
+            )}
+          </Tooltip>,
+          <Button
+            data-testid={PreviewTestIds.PREVIEW_SELECT_BUTTON}
+            variant={ButtonVariants.CONTAINED}
+            disabled={disableSelectButton}
+            onClick={handleSelect}
+          >
+            {selectButtonTitle}
+          </Button>,
+        ]}
+        onClickBackButton={onClickBackButton}
+      />
+    </Grid>
+  );
+};
+
 const Preview: React.FC<PreviewProps> = ({
   open,
   reactComponent,
@@ -296,7 +417,7 @@ const Preview: React.FC<PreviewProps> = ({
   isFetchingAssets = false,
   customHeaderTitle,
   handleError,
-  isVersionComparison = false,
+  versions,
 }: PreviewProps) => {
   const fallbackAssetValue: Assets[] = [
     {
@@ -331,6 +452,7 @@ const Preview: React.FC<PreviewProps> = ({
   const imageRef = React.useRef<HTMLImageElement>(null);
 
   const [isAssetFinishedRendering, setIsAssetFinishedRendering] = React.useState(false);
+  const isVersionComparison = versions.compare && versions.compare === true;
 
   const handleResize = () => {
     if (videoRef.current && imageContainerRef.current) {
@@ -633,7 +755,7 @@ const Preview: React.FC<PreviewProps> = ({
         direction="column"
         justifyContent="flex-start"
       >
-        <Grid>
+        {/* <Grid>
           <Header
             startSection={{
               hamburgerSpace: false,
@@ -713,67 +835,158 @@ const Preview: React.FC<PreviewProps> = ({
             ]}
             onClickBackButton={onClickBackButton}
           />
-        </Grid>
+        </Grid> */}
         <>
-          <ImageContainer
-            ref={imageContainerRef}
-            container
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{
-              height: `calc(100% - ${isVideo ? '55' : '61'}px)`,
-            }}
-          >
-            { !isVersionComparison && (
-              <Tooltip
-                tooltipsize="small"
-                placement="bottom-start"
-                title={tooltipTexts.previousAsset}
-              >
-                <PreviousPreviewButton>
-                  <StyledArrowButton
-                    data-testid={PreviewTestIds.PREVIEW_PREV_BUTTON}
-                    disabled={isPreviousDisabled}
-                    onClick={handlePreviousAsset}
-                  >
-                    <ChevronLeft />
-                  </StyledArrowButton>
-                </PreviousPreviewButton>
-              </Tooltip>
-            )}
+          {
+          !isVersionComparison ? (
             <>
-              {(isCurrentAssetReady === false && reactComponent === undefined) && (
-              <CircularProgressContainer
-                data-testid={PreviewTestIds.PREVIEW_CIRCULAR_PROGRESS}
+              <PreviewHeader
+                currentAsset={currentAsset}
+                currentRendition={currentRendition}
+                disableDownload={!isCurrentAssetReady || reactComponent !== undefined}
+                renditionLabel={renditionLabel}
+                onChangeRendition={handleOnChangeSelect}
+                disableRenditionDropdown={!isCurrentAssetReady || reactComponent !== undefined}
+                selectButtonTitle={selectButtonTitle}
+                customTitle={customHeaderTitle}
+                disableSelectButton={isSelectButtonDisabled || !isCurrentAssetReady || reactComponent !== undefined}
+                downloadTooltipText={tooltipTexts.download}
+                handleDownload={handleDownload}
+                handleSelect={(e) => {
+                  const selectRenditionId = currentRendition.id;
+                  if (handleSelect) handleSelect(e, selectRenditionId);
+                }}
+                hideMiddleSection={isVideo || isVersionComparison}
+                isVersionComparison={isVersionComparison}
+                onClickBackButton={onClickBackButton}
+              />
+
+              <ImageContainer
+                ref={imageContainerRef}
                 container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
                 sx={{
                   height: `calc(100% - ${isVideo ? '55' : '61'}px)`,
                 }}
               >
-                <CircularProgress />
-              </CircularProgressContainer>
-              )}
-              {renderOptions()}
-            </>
-            { !isVersionComparison && (
-              <Tooltip
-                tooltipsize="small"
-                placement="bottom-end"
-                title={tooltipTexts.nextAsset}
-              >
-                <NextPreviewButton>
-                  <StyledArrowButton
-                    data-testid={PreviewTestIds.PREVIEW_NEXT_BUTTON}
-                    disabled={isNextDisabled}
-                    onClick={handleNextAsset}
+                <Tooltip
+                  tooltipsize="small"
+                  placement="bottom-start"
+                  title={tooltipTexts.previousAsset}
+                >
+                  <PreviousPreviewButton>
+                    <StyledArrowButton
+                      data-testid={PreviewTestIds.PREVIEW_PREV_BUTTON}
+                      disabled={isPreviousDisabled}
+                      onClick={handlePreviousAsset}
+                    >
+                      <ChevronLeft />
+                    </StyledArrowButton>
+                  </PreviousPreviewButton>
+                </Tooltip>
+                <>
+                  {(isCurrentAssetReady === false && reactComponent === undefined) && (
+                  <CircularProgressContainer
+                    data-testid={PreviewTestIds.PREVIEW_CIRCULAR_PROGRESS}
+                    container
+                    sx={{
+                      height: `calc(100% - ${isVideo ? '55' : '61'}px)`,
+                    }}
                   >
-                    <ChevronRight />
-                  </StyledArrowButton>
-                </NextPreviewButton>
-              </Tooltip>
-            )}
-          </ImageContainer>
+                    <CircularProgress />
+                  </CircularProgressContainer>
+                  )}
+                  {renderOptions()}
+                </>
+                <Tooltip
+                  tooltipsize="small"
+                  placement="bottom-end"
+                  title={tooltipTexts.nextAsset}
+                >
+                  <NextPreviewButton>
+                    <StyledArrowButton
+                      data-testid={PreviewTestIds.PREVIEW_NEXT_BUTTON}
+                      disabled={isNextDisabled}
+                      onClick={handleNextAsset}
+                    >
+                      <ChevronRight />
+                    </StyledArrowButton>
+                  </NextPreviewButton>
+                </Tooltip>
+              </ImageContainer>
+            </>
+          ) : [versions.versionOne, versions.versionTwo].map(() => {
+            return (
+              <Grid direction="row" maxWidth="27vw">
+                <PreviewHeader
+                  currentAsset={currentAsset}
+                  currentRendition={currentRendition}
+                  disableDownload={!isCurrentAssetReady || reactComponent !== undefined}
+                  renditionLabel={renditionLabel}
+                  onChangeRendition={handleOnChangeSelect}
+                  disableRenditionDropdown={!isCurrentAssetReady || reactComponent !== undefined}
+                  selectButtonTitle={selectButtonTitle}
+                  customTitle={customHeaderTitle}
+                  disableSelectButton={isSelectButtonDisabled || !isCurrentAssetReady || reactComponent !== undefined}
+                  downloadTooltipText={tooltipTexts.download}
+                  handleDownload={handleDownload}
+                  handleSelect={(e) => {
+                    const selectRenditionId = currentRendition.id;
+                    if (handleSelect) handleSelect(e, selectRenditionId);
+                  }}
+                  hideMiddleSection={isVideo || isVersionComparison}
+                  isVersionComparison={isVersionComparison}
+                  onClickBackButton={onClickBackButton}
+                />
+
+                <ImageContainer
+                  ref={imageContainerRef}
+                  container
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{
+                    height: `calc(100% - ${isVideo ? '55' : '61'}px)`,
+                  }}
+                >
+                  <>
+                    {(isCurrentAssetReady === false && reactComponent === undefined) && (
+                    <CircularProgressContainer
+                      data-testid={PreviewTestIds.PREVIEW_CIRCULAR_PROGRESS}
+                      container
+                      sx={{
+                        height: `calc(100% - ${isVideo ? '55' : '61'}px)`,
+                      }}
+                    >
+                      <CircularProgress />
+                    </CircularProgressContainer>
+                    )}
+                    {renderOptions()}
+                  </>
+                  { !isVersionComparison && (
+                  <Tooltip
+                    tooltipsize="small"
+                    placement="bottom-end"
+                    title={tooltipTexts.nextAsset}
+                  >
+                    <NextPreviewButton>
+                      <StyledArrowButton
+                        data-testid={PreviewTestIds.PREVIEW_NEXT_BUTTON}
+                        disabled={isNextDisabled}
+                        onClick={handleNextAsset}
+                      >
+                        <ChevronRight />
+                      </StyledArrowButton>
+                    </NextPreviewButton>
+                  </Tooltip>
+                  )}
+                </ImageContainer>
+              </Grid>
+            );
+          })
+        }
           {(!isVersionComparison && !isVideo && isCurrentAssetReady && reactComponent === undefined) && (
           <Grid
             container
