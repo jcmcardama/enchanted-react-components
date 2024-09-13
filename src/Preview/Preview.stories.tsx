@@ -64,7 +64,8 @@ export default {
       description: 'It indicates whether the assets prop is still fetching',
     },
     isVersionComparison: {
-      description: 'versions data',
+      description: 'It indicates whether the preview component is used as version comparison',
+      type: 'boolean',
     },
     isNextButtonDisabled: {
       description: 'Enable/disable next button.',
@@ -178,63 +179,7 @@ export const ExampleImagePreview = {
     isFetchingAssets: false,
     selectButtonTitle: 'Select',
     tooltipTexts,
-    versions: {
-      compare: false,
-      versionOne: {
-        title: 'Spitburg-Chair-Elemonte.jpg',
-        mediaType: {
-          mimeType: 'image/jpg',
-          extensions: ['jpg'],
-        },
-        renditions: [
-          {
-            id: '1',
-            type: 'Source',
-            source: 'Spitburg-Chair-Elemonte-Source.jpg',
-            dimension: '3684 x 4220',
-          },
-          {
-            id: '2',
-            type: 'Desktop',
-            source: 'Spitburg-Chair-Elemonte-Desktop.jpg',
-            dimension: '1280 x 1032',
-          },
-          {
-            id: '3',
-            type: 'Smartphone',
-            source: 'Spitburg-Chair-Elemonte-Smartphone.jpg',
-            dimension: '512 x 576',
-          },
-        ],
-      },
-      versionTwo: {
-        title: 'Spitburg-Chair-Elemonte.jpg',
-        mediaType: {
-          mimeType: 'image/jpg',
-          extensions: ['jpg'],
-        },
-        renditions: [
-          {
-            id: '1',
-            type: 'Source',
-            source: 'Spitburg-Chair-Elemonte-Source.jpg',
-            dimension: '3684 x 4220',
-          },
-          {
-            id: '2',
-            type: 'Desktop',
-            source: 'Spitburg-Chair-Elemonte-Desktop.jpg',
-            dimension: '1280 x 1032',
-          },
-          {
-            id: '3',
-            type: 'Smartphone',
-            source: 'Spitburg-Chair-Elemonte-Smartphone.jpg',
-            dimension: '512 x 576',
-          },
-        ],
-      },
-    },
+    isVersionComparison: false,
   },
 };
 
