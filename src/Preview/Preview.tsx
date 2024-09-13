@@ -14,7 +14,8 @@
  * ======================================================================== */
 import * as React from 'react';
 import {
-  Grid, SelectChangeEvent,
+  Theme, Grid, SelectChangeEvent,
+  Box,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import IconDownload from '@hcl-software/enchanted-icons/dist/carbon/es/download';
@@ -34,6 +35,7 @@ import Backdrop from '../Backdrop/Backdrop';
 import ListItemText from '../List/ListItemText';
 import CircularProgress from '../ProgressIndicator/CircularProgress/CircularProgress';
 import { white } from '../colors';
+import { TYPOGRAPHY } from '../theme';
 
 /**
  * @typedef PreviewProps
@@ -54,6 +56,7 @@ import { white } from '../colors';
  * @property {boolean} isFetchingAssets - indicate whether the assets prop is still fetching, Note: even when this is false and asset is not finished rendering, <Preview /> will still show spinner
  * @property {boolean} customHeaderTitle - custom header title
  * @property {boolean} isVersionComparison - check if the preivew is used for version comparison
+ * @property {boolean} isCurrentVersion - check if the version is current that is used for version comparison
 */
 
 export interface MediaType {
@@ -100,6 +103,7 @@ export interface PreviewProps {
   customHeaderTitle?: string;
   handleError?: (event: React.SyntheticEvent<HTMLVideoElement | HTMLImageElement, Event>) => void;
   isVersionComparison?: boolean;
+  isCurrentVersion?: boolean;
 }
 
 // Zoom button margin is 12px
@@ -297,6 +301,7 @@ const Preview: React.FC<PreviewProps> = ({
   customHeaderTitle,
   handleError,
   isVersionComparison = false,
+  isCurrentVersion = true,
 }: PreviewProps) => {
   const fallbackAssetValue: Assets[] = [
     {
@@ -637,8 +642,42 @@ const Preview: React.FC<PreviewProps> = ({
           <Header
             startSection={{
               hamburgerSpace: false,
-              withBackButton: true,
-              title: customHeaderTitle ?? currentAsset.title,
+              withBackButton: true && !isVersionComparison,
+              title: !isVersionComparison ? (customHeaderTitle ?? currentAsset.title) : undefined,
+              customTitle: (isVersionComparison)
+                && (
+                <Box>
+                  <Typography
+                    sx={{
+                      margin: '-4px',
+                      color: (scopedTheme: Theme) => { return isCurrentVersion ? scopedTheme.palette.primary.main : scopedTheme.palette.text.primary; },
+                      ...TYPOGRAPHY.subtitle2,
+                    }}
+                  >
+                    {currentAsset.title}
+                    <Typography
+                      sx={{
+                        ...TYPOGRAPHY.caption,
+                        height: '14px',
+                        color: (scopedTheme: Theme) => { return scopedTheme.palette.text.secondary; },
+                      }}
+                    >
+                      &nbsp;
+                      {isCurrentVersion ? 'v2(current)' : 'v1'}
+                    </Typography>
+                  </Typography>
+                  <Typography
+                    sx={{
+                      ...TYPOGRAPHY.caption,
+                      margin: '-4px',
+                      height: '14px',
+                      color: (scopedTheme: Theme) => { return scopedTheme.palette.text.secondary; },
+                    }}
+                  >
+                    wpsadmin(7/29/2024 1:51 PM)
+                  </Typography>
+                </Box>
+                ),
             }}
             middleSection={[
               <Typography color="textSecondary" variant="subtitle2" marginRight={-1}>{renditionLabel}</Typography>,
@@ -699,17 +738,33 @@ const Preview: React.FC<PreviewProps> = ({
                   </IconButton>
                 )}
               </Tooltip>,
-              <Button
-                data-testid={PreviewTestIds.PREVIEW_SELECT_BUTTON}
-                variant={ButtonVariants.CONTAINED}
-                disabled={isSelectButtonDisabled || !isCurrentAssetReady || reactComponent !== undefined}
-                onClick={(e) => {
-                  const selectRenditionId = currentRendition.id;
-                  if (handleSelect) handleSelect(e, selectRenditionId);
-                }}
-              >
-                {selectButtonTitle}
-              </Button>,
+              ((!isVersionComparison)
+                ? (
+                  <Button
+                    data-testid={PreviewTestIds.PREVIEW_SELECT_BUTTON}
+                    variant={ButtonVariants.CONTAINED}
+                    disabled={isSelectButtonDisabled || !isCurrentAssetReady || reactComponent !== undefined}
+                    onClick={(e) => {
+                      const selectRenditionId = currentRendition.id;
+                      if (handleSelect) handleSelect(e, selectRenditionId);
+                    }}
+                  >
+                    {selectButtonTitle}
+                  </Button>
+                ) : (isVersionComparison && !isCurrentVersion)
+                && (
+                  <Button
+                    data-testid={PreviewTestIds.PREVIEW_SELECT_BUTTON}
+                    variant={ButtonVariants.CONTAINED}
+                    onClick={(e) => {
+                      const selectRenditionId = currentRendition.id;
+                      if (handleSelect) handleSelect(e, selectRenditionId);
+                    }}
+                  >
+                    {selectButtonTitle}
+                  </Button>
+                )
+              ),
             ]}
             onClickBackButton={onClickBackButton}
           />
@@ -774,7 +829,7 @@ const Preview: React.FC<PreviewProps> = ({
               </Tooltip>
             )}
           </ImageContainer>
-          {(!isVersionComparison && !isVideo && isCurrentAssetReady && reactComponent === undefined) && (
+          {(!isVideo && isCurrentAssetReady && reactComponent === undefined) && (
           <Grid
             container
             justifyContent="center"

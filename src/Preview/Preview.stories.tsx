@@ -17,6 +17,7 @@ import React from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 
 import IconAvatar from '@hcl-software/enchanted-icons/dist/carbon/es/folder';
+import { Box, Grid } from '@mui/material';
 import Preview, { PreviewProps } from './Preview';
 import Avatar, { AvatarColors, AvatarTypes } from '../Avatar';
 import Typography from '../Typography';
@@ -67,6 +68,10 @@ export default {
       description: 'It indicates whether the preview component is used as version comparison',
       type: 'boolean',
     },
+    isCurrentVersion: {
+      description: 'It indicates whether the version is current for version comparisonn',
+      type: 'boolean',
+    },
     isNextButtonDisabled: {
       description: 'Enable/disable next button.',
     },
@@ -103,6 +108,48 @@ const tooltipTexts: PreviewProps['tooltipTexts'] = {
   previousAsset: 'Previous asset',
   nextAsset: 'Next asset',
   download: 'Download',
+};
+
+const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
+  return (
+    <Grid container maxHeight="100vh" maxWidth="100vw">
+      <Grid item>
+        <Typography sx={{ color: 'rgba(0, 0, 0, 0.60);' }} variant="body1">
+          Visual Test for Version Comparison
+        </Typography>
+      </Grid>
+      <Grid item>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignContent: 'stretch',
+          }}
+        >
+          <Box
+            sx={{
+              width: '50px',
+              flexShrink: 1,
+            }}
+          >
+            <Preview {...args} />
+          </Box>
+          <Box
+            sx={{
+              width: '50px',
+              flexShrink: 1,
+            }}
+          >
+            <Preview
+              isCurrentVersion={false}
+              {...args}
+            />
+          </Box>
+        </Box>
+      </Grid>
+    </Grid>
+  );
 };
 
 const Template: StoryFn<typeof Preview> = (args) => {
@@ -180,6 +227,7 @@ export const ExampleImagePreview = {
     selectButtonTitle: 'Select',
     tooltipTexts,
     isVersionComparison: false,
+    isCurrentVersion: true,
   },
 };
 
@@ -233,4 +281,32 @@ export const ExampleComponentPreview = {
     tooltipTexts,
     reactComponent: sampleComponent(),
   },
+};
+
+export const VisualTest = VisualTestTemplate.bind({});
+VisualTest.parameters = {
+  options: { showPanel: false },
+};
+VisualTest.args = {
+  ...Preview.defaultProps,
+  assets: [
+    {
+      title: 'Hanging-chair.png',
+      mediaType: {
+        mimeType: 'image/png',
+        extensions: ['png'],
+      },
+      renditions: [
+        {
+          id: '4',
+          type: 'Source',
+          source: 'Hanging-chair.png',
+          dimension: '4928 x 3264',
+        },
+      ],
+    },
+  ],
+  selectButtonTitle: 'Set as current',
+  tooltipTexts,
+  isVersionComparison: true,
 };

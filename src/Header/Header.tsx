@@ -54,6 +54,7 @@ export enum HeaderTestIds {
 export interface IHeaderStartSection {
   hamburgerSpace?: boolean;
   title?: string,
+  customTitle?: React.ReactNode,
   withBackButton?: boolean,
   avatar?: React.ReactNode,
   subtitle?: string,
@@ -252,6 +253,7 @@ const Header = ({ ...props }: HeaderProps) => {
               </Tooltip>
             )}
           {startSection?.avatar !== undefined && startSection.avatar}
+          {startSection?.customTitle !== undefined && startSection?.title === undefined && startSection.customTitle}
           {startSection?.title !== undefined
             && (
               <Tooltip
