@@ -112,6 +112,12 @@ const tooltipTexts: PreviewProps['tooltipTexts'] = {
   download: 'Download',
 };
 
+const versionInformation: PreviewProps['versionInformation'] = {
+  isCurrentVersion: true,
+  versionNumber: 'v1',
+  versionEditor: 'wpsadmin(7/29/2024 1:51 PM)',
+};
+
 const style = {
   py: 0,
   width: '100%',
@@ -241,8 +247,12 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
             >
               {/* Preview Comp */}
               <Preview
-                isCurrentVersion={false}
                 {...args}
+                versionInformation={{
+                  isCurrentVersion: false,
+                  versionNumber: 'v2',
+                  versionEditor: 'wpsadmin(7/29/2024 1:51 PM)',
+                }}
               />
             </Box>
             <List sx={style}>
@@ -376,7 +386,7 @@ export const ExampleImagePreview = {
     selectButtonTitle: 'Select',
     tooltipTexts,
     isVersionComparison: false,
-    isCurrentVersion: true,
+    versionInformation,
   },
 };
 
@@ -458,4 +468,5 @@ VisualTest.args = {
   selectButtonTitle: 'Set as current',
   tooltipTexts,
   isVersionComparison: true,
+  versionInformation,
 };

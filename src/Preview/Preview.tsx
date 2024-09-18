@@ -103,7 +103,11 @@ export interface PreviewProps {
   customHeaderTitle?: string;
   handleError?: (event: React.SyntheticEvent<HTMLVideoElement | HTMLImageElement, Event>) => void;
   isVersionComparison?: boolean;
-  isCurrentVersion?: boolean;
+  versionInformation?: {
+    isCurrentVersion: boolean;
+    versionNumber: string;
+    versionEditor: string;
+  }
 }
 
 // Zoom button margin is 12px
@@ -301,7 +305,7 @@ const Preview: React.FC<PreviewProps> = ({
   customHeaderTitle,
   handleError,
   isVersionComparison = false,
-  isCurrentVersion = true,
+  versionInformation,
 }: PreviewProps) => {
   const fallbackAssetValue: Assets[] = [
     {
@@ -654,7 +658,7 @@ const Preview: React.FC<PreviewProps> = ({
                   <Typography
                     sx={{
                       margin: '-4px',
-                      color: (scopedTheme: Theme) => { return isCurrentVersion ? scopedTheme.palette.primary.main : scopedTheme.palette.text.primary; },
+                      color: (scopedTheme: Theme) => { return versionInformation?.isCurrentVersion ? scopedTheme.palette.primary.main : scopedTheme.palette.text.primary; },
                       ...TYPOGRAPHY.subtitle2,
                     }}
                   >
@@ -667,7 +671,7 @@ const Preview: React.FC<PreviewProps> = ({
                       }}
                     >
                       &nbsp;
-                      {isCurrentVersion ? 'v2(current)' : 'v1'}
+                      {`${versionInformation?.versionNumber}${versionInformation?.isCurrentVersion ? '(current)' : ''}`}
                     </Typography>
                   </Typography>
                   <Typography
@@ -678,7 +682,7 @@ const Preview: React.FC<PreviewProps> = ({
                       color: (scopedTheme: Theme) => { return scopedTheme.palette.text.secondary; },
                     }}
                   >
-                    wpsadmin(7/29/2024 1:51 PM)
+                    {versionInformation?.versionEditor}
                   </Typography>
                 </Box>
                 ),
@@ -755,7 +759,7 @@ const Preview: React.FC<PreviewProps> = ({
                   >
                     {selectButtonTitle}
                   </Button>
-                ) : (isVersionComparison && !isCurrentVersion)
+                ) : (isVersionComparison && !versionInformation?.isCurrentVersion)
                 && (
                   <Button
                     data-testid={PreviewTestIds.PREVIEW_SELECT_BUTTON}
