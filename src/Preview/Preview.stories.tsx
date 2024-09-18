@@ -17,7 +17,9 @@ import React from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 
 import IconAvatar from '@hcl-software/enchanted-icons/dist/carbon/es/folder';
-import { Box, Grid } from '@mui/material';
+import {
+  Box, Divider, Grid, List, ListItem, ListItemText,
+} from '@mui/material';
 import Preview, { PreviewProps } from './Preview';
 import Avatar, { AvatarColors, AvatarTypes } from '../Avatar';
 import Typography from '../Typography';
@@ -110,9 +112,20 @@ const tooltipTexts: PreviewProps['tooltipTexts'] = {
   download: 'Download',
 };
 
+const style = {
+  py: 0,
+  width: '100%',
+  border: '1px solid',
+  borderColor: 'divider',
+  backgroundColor: 'background.paper',
+  borderLeft: 'none',
+  borderRight: 'none',
+  borderBottom: 'none',
+};
+
 const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
   return (
-    <Grid container maxHeight="100vh" maxWidth="100vw">
+    <Grid container>
       <Grid item>
         <Typography sx={{ color: 'rgba(0, 0, 0, 0.60);' }} variant="body1">
           Visual Test for Version Comparison
@@ -121,30 +134,166 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
       <Grid item>
         <Box
           sx={{
+            height: '792px',
+            width: '1256px',
             display: 'flex',
-            flexDirection: 'row',
             justifyContent: 'space-between',
-            alignContent: 'stretch',
           }}
         >
-          <Box
-            sx={{
-              width: '50px',
-              flexShrink: 1,
-            }}
-          >
-            <Preview {...args} />
+          <Box>
+            <Box
+              sx={{
+                height: '434px',
+                width: '621.5px',
+                // backgroundColor: 'blue',
+                marginBottom: '12px',
+                color: 'white',
+              }}
+            >
+              {/* Preview Comp */}
+              <Preview
+                {...args}
+                assets={[
+                  {
+                    title: 'Business-workshop.png',
+                    mediaType: {
+                      mimeType: 'image/png',
+                      extensions: ['png'],
+                    },
+                    renditions: [
+                      {
+                        id: '5',
+                        type: 'Source',
+                        source: 'Business-workshop.png',
+                        dimension: '1000 x 400',
+                      },
+                    ],
+                  },
+                ]}
+              />
+            </Box>
+            <List sx={style}>
+              <ListItem
+                sx={{
+                  height: '37px',
+                }}
+              >
+                <ListItemText primary="Meta details" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  height: '62px',
+                }}
+              >
+                <ListItemText primary="Resolution" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  height: '62px',
+                }}
+              >
+                <ListItemText primary="Size" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  height: '62px',
+                }}
+              >
+                <ListItemText primary="Actions" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  height: '62px',
+                }}
+              >
+                <ListItemText primary="Modified by" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  height: '62px',
+                }}
+              >
+                <ListItemText primary="Date Modified" />
+              </ListItem>
+            </List>
           </Box>
-          <Box
+          <Divider
+            orientation="vertical"
             sx={{
-              width: '50px',
-              flexShrink: 1,
+              height: '792px',
+              width: '1px',
             }}
-          >
-            <Preview
-              isCurrentVersion={false}
-              {...args}
-            />
+          />
+          <Box>
+            <Box
+              sx={{
+                height: '434px',
+                width: '621.5px',
+                // backgroundColor: 'black',
+                marginBottom: '12px',
+                color: 'white',
+              }}
+            >
+              {/* Preview Comp */}
+              <Preview
+                isCurrentVersion={false}
+                {...args}
+              />
+            </Box>
+            <List sx={style}>
+              <ListItem
+                sx={{
+                  height: '37px',
+                }}
+              >
+                <ListItemText primary="Meta details" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  height: '62px',
+                }}
+              >
+                <ListItemText primary="Resolution" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  height: '62px',
+                }}
+              >
+                <ListItemText primary="Size" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  height: '62px',
+                }}
+              >
+                <ListItemText primary="Actions" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  height: '62px',
+                }}
+              >
+                <ListItemText primary="Modified by" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  height: '62px',
+                }}
+              >
+                <ListItemText primary="Date Modified" />
+              </ListItem>
+            </List>
           </Box>
         </Box>
       </Grid>

@@ -631,12 +631,16 @@ const Preview: React.FC<PreviewProps> = ({
       open={open}
       sx={{
         zIndex: 999,
+        position: isVersionComparison ? 'relative' : 'fixed',
       }}
     >
       <PreviewContainer
         container
         direction="column"
         justifyContent="flex-start"
+        sx={{
+          height: isVersionComparison ? '446px' : '100vh',
+        }}
       >
         <Grid>
           <Header
@@ -834,7 +838,11 @@ const Preview: React.FC<PreviewProps> = ({
             container
             justifyContent="center"
           >
-            <ZoomContainer>
+            <ZoomContainer
+              sx={{
+                position: isVersionComparison ? 'absolute' : 'fixed',
+              }}
+            >
               <Tooltip
                 tooltipsize="small"
                 placement="top"
