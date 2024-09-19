@@ -118,16 +118,16 @@ const versionInformation: PreviewProps['versionInformation'] = {
   versionEditor: 'wpsadmin(7/29/2024 1:51 PM)',
 };
 
-const style = {
-  py: 0,
-  width: '100%',
-  border: '1px solid',
-  borderColor: 'divider',
-  backgroundColor: 'background.paper',
-  borderLeft: 'none',
-  borderRight: 'none',
-  borderBottom: 'none',
-};
+// const style = {
+//   py: 0,
+//   width: '100%',
+//   border: '1px solid',
+//   borderColor: 'divider',
+//   backgroundColor: 'background.paper',
+//   borderLeft: 'none',
+//   borderRight: 'none',
+//   borderBottom: 'none',
+// };
 
 const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
   return (
@@ -149,9 +149,9 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
           <Box>
             <Box
               sx={{
-                height: '434px',
                 width: '621.5px',
                 // backgroundColor: 'blue',
+                height: '446px',
                 marginBottom: '12px',
                 color: 'white',
               }}
@@ -178,7 +178,7 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
                 ]}
               />
             </Box>
-            <List sx={style}>
+            {/* <List sx={style}>
               <ListItem
                 sx={{
                   height: '37px',
@@ -226,7 +226,7 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
               >
                 <ListItemText primary="Date Modified" />
               </ListItem>
-            </List>
+            </List> */}
           </Box>
           <Divider
             orientation="vertical"
@@ -238,9 +238,9 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
           <Box>
             <Box
               sx={{
-                height: '434px',
                 width: '621.5px',
                 // backgroundColor: 'black',
+                height: '446px',
                 marginBottom: '12px',
                 color: 'white',
               }}
@@ -255,7 +255,7 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
                 }}
               />
             </Box>
-            <List sx={style}>
+            {/* <List sx={style}>
               <ListItem
                 sx={{
                   height: '37px',
@@ -303,7 +303,7 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
               >
                 <ListItemText primary="Date Modified" />
               </ListItem>
-            </List>
+            </List> */}
           </Box>
         </Box>
       </Grid>

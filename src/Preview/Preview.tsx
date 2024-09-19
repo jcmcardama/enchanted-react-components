@@ -785,7 +785,7 @@ const Preview: React.FC<PreviewProps> = ({
             justifyContent="space-between"
             alignItems="center"
             sx={{
-              height: `calc(100% - ${isVideo ? '55' : '61'}px)`,
+              height: `calc(100% - ${isVideo || isVersionComparison === true ? '55' : '61'}px)`,
             }}
           >
             { !isVersionComparison && (
