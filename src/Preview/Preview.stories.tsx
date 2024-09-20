@@ -134,7 +134,7 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
     <Grid container>
       <Grid item>
         <Typography sx={{ color: 'rgba(0, 0, 0, 0.60);' }} variant="body1">
-          Visual Test for Version Comparison
+          Visual Test for Version Comparison - Preview
         </Typography>
       </Grid>
       <Grid item>
@@ -228,14 +228,14 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
               </ListItem>
             </List> */}
           </Box>
-          <Divider
+          {/* <Divider
             orientation="vertical"
             sx={{
               height: '792px',
               width: '1px',
             }}
-          />
-          <Box>
+          /> */}
+          {/* <Box>
             <Box
               sx={{
                 width: '621.5px',
@@ -245,7 +245,6 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
                 color: 'white',
               }}
             >
-              {/* Preview Comp */}
               <Preview
                 {...args}
                 versionInformation={{
@@ -255,7 +254,7 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
                 }}
               />
             </Box>
-            {/* <List sx={style}>
+            <List sx={style}>
               <ListItem
                 sx={{
                   height: '37px',
@@ -303,8 +302,8 @@ const VisualTestTemplate: StoryFn<typeof Preview> = (args) => {
               >
                 <ListItemText primary="Date Modified" />
               </ListItem>
-            </List> */}
-          </Box>
+            </List>
+          </Box> */}
         </Box>
       </Grid>
     </Grid>

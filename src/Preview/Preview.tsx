@@ -648,6 +648,9 @@ const Preview: React.FC<PreviewProps> = ({
       >
         <Grid>
           <Header
+            sx={{
+              display: 'none',
+            }}
             startSection={{
               hamburgerSpace: false,
               withBackButton: true && !isVersionComparison,
